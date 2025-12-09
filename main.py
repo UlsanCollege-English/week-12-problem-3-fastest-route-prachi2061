@@ -1,8 +1,4 @@
-
-## main.py
-```python
 import heapq
-
 
 def dijkstra_shortest_path(graph, start, goal):
     """
@@ -18,17 +14,50 @@ def dijkstra_shortest_path(graph, start, goal):
         - total_cost: sum of weights along the path
         If start/goal is not in graph or goal is unreachable, return ([], None).
     """
-    # TODO Step 1: Briefly write what this function should compute.
-    # TODO Step 2: Re-phrase the problem in simple English in a comment.
-    # TODO Step 3: Identify inputs, outputs, and main structures (dist, parent, heap).
-    # TODO Step 4: Plan Dijkstra: how to update distances and parents.
-    # TODO Step 5: Write pseudocode for Dijkstra using a priority queue (heap).
-    # TODO Step 6: Translate your pseudocode into Python with heapq.
-    # TODO Step 7: Test with small graphs where you know the correct answer.
-    # TODO Step 8: Check that your solution's complexity is about O((V + E) log V).
-
-    raise NotImplementedError("dijkstra_shortest_path is not implemented yet")
-
+    if start not in graph or goal not in graph:
+        return [], None
+    
+    # Priority queue: (distance, node)
+    pq = [(0, start)]
+    # Distance dictionary
+    dist = {node: float('inf') for node in graph}
+    dist[start] = 0
+    # Parent dictionary for path reconstruction
+    parent = {node: None for node in graph}
+    # Visited set
+    visited = set()
+    
+    while pq:
+        current_dist, current_node = heapq.heappop(pq)
+        
+        if current_node in visited:
+            continue
+        visited.add(current_node)
+        
+        if current_node == goal:
+            break
+        
+        for neighbor, weight in graph.get(current_node, []):
+            if neighbor in visited:
+                continue
+            new_dist = current_dist + weight
+            if new_dist < dist[neighbor]:
+                dist[neighbor] = new_dist
+                parent[neighbor] = current_node
+                heapq.heappush(pq, (new_dist, neighbor))
+    
+    # Reconstruct path if goal is reachable
+    if dist[goal] == float('inf'):
+        return [], None
+    
+    path = []
+    current = goal
+    while current is not None:
+        path.append(current)
+        current = parent[current]
+    path.reverse()
+    
+    return path, dist[goal]
 
 if __name__ == "__main__":
     # Optional quick check
