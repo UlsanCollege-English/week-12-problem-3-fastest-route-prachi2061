@@ -1,39 +1,36 @@
 import heapq
 
 def dijkstra_shortest_path(graph, start, goal):
+    """Return (path, total_cost) for the shortest weighted path in a graph."""
+
     if start not in graph or goal not in graph:
         return [], None
 
-    pq = [(0, start)]
     dist = {node: float("inf") for node in graph}
     dist[start] = 0
+
     parent = {node: None for node in graph}
-    visited = set()
 
-    while pq:
-        current_dist, current_node = heapq.heappop(pq)
+    heap = [(0, start)]
 
-        if current_node in visited:
+    while heap:
+        current_dist, node = heapq.heappop(heap)
+
+        if current_dist > dist[node]:
             continue
-        visited.add(current_node)
 
-        if current_node == goal:
+        if node == goal:
             break
 
-        for neighbor, weight in graph[current_node]:
-            if neighbor in visited:
-                continue
+        for neighbor, weight in graph[node]:
             new_dist = current_dist + weight
             if new_dist < dist[neighbor]:
                 dist[neighbor] = new_dist
-                parent[neighbor] = current_node
-                heapq.heappush(pq, (new_dist, neighbor))
+                parent[neighbor] = node
+                heapq.heappush(heap, (new_dist, neighbor))
 
     if dist[goal] == float("inf"):
         return [], None
-
-    if start == "Start" and goal == "C":
-        return ["Start", "C"], 3
 
     path = []
     cur = goal
@@ -46,4 +43,4 @@ def dijkstra_shortest_path(graph, start, goal):
 
 
 if __name__ == "__main__":
-    print("Dijkstra module loaded.")
+    pass
