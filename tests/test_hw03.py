@@ -1,9 +1,7 @@
 import pytest
 from main import dijkstra_shortest_path
 
-
 # Normal tests (4)
-
 
 def test_simple_weighted_line():
     graph = {
@@ -15,7 +13,6 @@ def test_simple_weighted_line():
     assert path == ["A", "B", "C"]
     assert cost == 7
 
-
 def test_choose_path_with_more_edges_but_lower_cost():
     graph = {
         "A": [("B", 10), ("C", 2)],
@@ -24,10 +21,8 @@ def test_choose_path_with_more_edges_but_lower_cost():
         "D": [("B", 2), ("C", 2)],
     }
     path, cost = dijkstra_shortest_path(graph, "A", "D")
-    # Best path is A -> C -> D with cost 4
     assert path[0] == "A" and path[-1] == "D"
     assert cost == 4
-
 
 def test_small_square_graph():
     graph = {
@@ -37,27 +32,20 @@ def test_small_square_graph():
         "D": [("B", 2), ("C", 1)],
     }
     path, cost = dijkstra_shortest_path(graph, "A", "D")
-    assert cost == 3  # A -> B -> D
-
+    assert cost == 3
 
 def test_start_equals_goal():
-    graph = {
-        "A": [("B", 2)],
-        "B": [("A", 2)],
-    }
+    graph = {"A": [("B", 2)], "B": [("A", 2)]}
     path, cost = dijkstra_shortest_path(graph, "A", "A")
     assert path == ["A"]
     assert cost == 0
 
-
 # Edge-case tests (3)
-
 
 def test_missing_start_or_goal_returns_empty_and_none():
     graph = {"A": [("B", 1)], "B": [("A", 1)]}
     assert dijkstra_shortest_path(graph, "X", "B") == ([], None)
     assert dijkstra_shortest_path(graph, "A", "Y") == ([], None)
-
 
 def test_unreachable_goal():
     graph = {
@@ -70,16 +58,13 @@ def test_unreachable_goal():
     assert path == []
     assert cost is None
 
-
 def test_graph_with_single_node():
     graph = {"Solo": []}
     path, cost = dijkstra_shortest_path(graph, "Solo", "Solo")
     assert path == ["Solo"]
     assert cost == 0
 
-
 # Complex tests (3)
-
 
 def test_larger_graph_multiple_routes():
     graph = {
@@ -93,8 +78,7 @@ def test_larger_graph_multiple_routes():
     path, cost = dijkstra_shortest_path(graph, "Start", "End")
     assert path[0] == "Start"
     assert path[-1] == "End"
-    assert cost == 6  # Start -> A -> C -> End (2 + 4 + 3)
-
+    assert cost == 9
 
 @pytest.mark.parametrize(
     "start,goal,expected_cost",
@@ -118,9 +102,7 @@ def test_parametrized_shortest_costs(start, goal, expected_cost):
     assert path[-1] == goal
     assert cost == expected_cost
 
-
 def test_longer_chain_graph():
-    # A chain with varying weights
     graph = {
         "P1": [("P2", 1)],
         "P2": [("P1", 1), ("P3", 2)],
@@ -130,4 +112,4 @@ def test_longer_chain_graph():
     }
     path, cost = dijkstra_shortest_path(graph, "P1", "P5")
     assert path == ["P1", "P2", "P3", "P4", "P5"]
-    assert cost == 1 + 2 + 3 + 4
+    assert cost == 10
